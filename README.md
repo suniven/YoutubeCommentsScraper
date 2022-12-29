@@ -2,6 +2,8 @@
 
 根据 video id 使用 YouTube Data API v3 抓取视频评论，可配置 Proxy。
 
+[Proxy 配置思路](https://suniven.github.io/posts/58e6e58f/)
+
 ## config.ini 配置
 
 ```ini
