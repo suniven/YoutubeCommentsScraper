@@ -1,35 +1,46 @@
 # -*- coding: utf-8 -*-
 
-# Sample Python code for youtube.commentThreads.list
-# See instructions for running these code samples locally:
-# https://developers.google.com/explorer-help/code-samples#python
-
 import os
 import googleapiclient.discovery
-import socket
-from httplib2 import socks
-import requests
-
-proxies = {
-    'http:': 'http://127.0.0.1:10809',
-    'https:': 'http://127.0.0.1:10809',
-}
+import httplib2
+from configparser import ConfigParser
 
 
-def send_request(videoId):
-    # # Disable OAuthlib's HTTPS verification when running locally.
-    # # *DO NOT* leave this option enabled in production.
-    # os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
-    DEVELOPER_KEY = "AIzaSyAjF3ppo5L9JLIBfHTNM7vlvISFb5NLlss"
+def read_config(filename):
+    conf = ConfigParser()
+    conf.read(filename)
+    api_service_name = conf.get("youtube", "api_service_name")
+    api_version = conf.get("youtube", "api_version")
+    API_KEY = conf.get("youtube", "API_KEY")
+    proxy_host = conf.get("proxy", "host")
+    proxy_port = conf.getint("proxy", "port")
 
-    request_url = "https://youtube.googleapis.com/youtube/v3/commentThreads?part=id&part=replies&part=snippet&maxResults=100&videoId=" + videoId + "&key=" + DEVELOPER_KEY
-    headers = {'content-type': 'application/json'}
-    response = requests.post(request_url, proxies=proxies)
-    if response:
-        data = response.json()
-        print(data)
-    print(response)
+    return api_service_name, api_version, API_KEY, proxy_host, proxy_port
+
+
+def build_client(api_service_name, api_version, API_KEY, proxy_host, proxy_port):
+    proxy_info = httplib2.ProxyInfo(proxy_type=httplib2.socks.PROXY_TYPE_HTTP, proxy_host=proxy_host,
+                                    proxy_port=proxy_port)
+    http = httplib2.Http(timeout=10, proxy_info=proxy_info, disable_ssl_certificate_validation=False)
+    youtube = googleapiclient.discovery.build(
+        api_service_name, api_version, developerKey=API_KEY, http=http)
+    return youtube
+
+
+def get_comments(youtube, videoId):
+    request = youtube.commentThreads().list(
+        part="id,snippet",
+        maxResults=100,
+        videoId=videoId
+    )
+    response = request.execute()
+    return response
 
 
 if __name__ == "__main__":
-    send_request('MuzMniAG2rQ')
+    api_service_name, api_version, API_KEY, proxy_host, proxy_port = read_config('config.ini')
+    print(api_service_name, type(api_service_name))
+    print(api_version, type(api_version))
+    print(API_KEY, type(API_KEY))
+    print(proxy_host, type(proxy_host))
+    print(proxy_port, type(proxy_port))

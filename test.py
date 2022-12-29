@@ -10,7 +10,7 @@ import googleapiclient.discovery
 import httplib2
 
 proxy_info = httplib2.ProxyInfo(proxy_type=httplib2.socks.PROXY_TYPE_HTTP, proxy_host="127.0.0.1", proxy_port=10809)
-http = httplib2.Http(timeout=None, proxy_info=proxy_info, disable_ssl_certificate_validation=False)
+http = httplib2.Http(timeout=10, proxy_info=proxy_info, disable_ssl_certificate_validation=False)
 
 
 def main():
