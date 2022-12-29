@@ -3,3 +3,4 @@ config.ini
 response.json
 test_comments.json
 testId.csv
+logs/

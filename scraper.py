@@ -7,6 +7,10 @@ from configparser import ConfigParser
 import pandas as pd
 import json
 import time
+from datetime import datetime
+import common.logger as logger
+
+_logger = logger.Logger('info')
 
 
 def read_config(filename):
@@ -35,8 +39,12 @@ def get_comments(youtube, videoId, pageToken):
                                             maxResults=100,
                                             videoId=videoId,
                                             pageToken=pageToken)
-    response = request.execute()
-    return response
+    try:
+        response = request.execute()
+        return response
+    except Exception as error:
+        _logger.error(error)
+        return None
 
 
 def process_response(response):
@@ -90,12 +98,16 @@ if __name__ == "__main__":
             while True:
                 # time.sleep(0.5)
                 response = get_comments(youtube, videoId, nextPageToken)
+                if not response:
+                    break
                 nextPageToken, result = process_response(response)
                 comments += result
                 if not nextPageToken:  # 该视频的评论抓完了
                     break
     except Exception as error:
-        print(error)
+        _logger.error(error)
     finally:
-        with open('all_comments.json', 'w', encoding='utf-8') as f:
-            json.dump(comments, f, indent=4)
+        if comments:
+            filename = "all_comments_" + str(datetime.timestamp(datetime.now())) + ".json"
+            with open(filename, 'w', encoding='utf-8') as f:
+                json.dump(comments, f, indent=4)
