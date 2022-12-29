@@ -108,6 +108,6 @@ if __name__ == "__main__":
         _logger.error(error)
     finally:
         if comments:
-            filename = "all_comments_" + str(datetime.timestamp(datetime.now())) + ".json"
+            filename = "./output/all_comments_" + str(datetime.timestamp(datetime.now())) + ".json"
             with open(filename, 'w', encoding='utf-8') as f:
                 json.dump(comments, f, indent=4)
