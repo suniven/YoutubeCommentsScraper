@@ -1,5 +1,7 @@
 # YoutubeCommentsScraper
 
+根据 video id 使用 YouTube Data API v3 抓取视频评论，可配置 Proxy。
+
 ## config.ini 配置
 
 ```ini
