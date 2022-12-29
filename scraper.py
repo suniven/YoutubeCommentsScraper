@@ -63,7 +63,7 @@ def process_response(response):
         author_name = comment["authorDisplayName"]
         author_profile_img_url = comment["authorProfileImageUrl"]
         author_channel_url = comment["authorChannelUrl"]
-        author_channel_id = comment["authorChannelId"]["value"]
+        author_channel_id = author_channel_url[-24:]
         publish_date = comment["publishedAt"]
         result.append({
             'video_id': video_id,
