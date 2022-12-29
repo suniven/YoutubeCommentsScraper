@@ -93,7 +93,7 @@ if __name__ == "__main__":
     videoIdList = df_id.video_id.to_list()
     try:
         comments = []
-        for videoId in videoIdList:
+        for index, videoId in enumerate(videoIdList):
             nextPageToken = None
             while True:
                 # time.sleep(0.5)
@@ -103,6 +103,13 @@ if __name__ == "__main__":
                 nextPageToken, result = process_response(response)
                 comments += result
                 if not nextPageToken:  # 该视频的评论抓完了
+                    if index % 5000 == 0:
+                        if comments:
+                            filename = "./output/all_comments_" + str(datetime.timestamp(
+                                datetime.now())) + ".json"
+                            with open(filename, 'w', encoding='utf-8') as f:
+                                json.dump(comments, f, indent=4)
+                            comments = []
                     break
     except Exception as error:
         _logger.error(error)
