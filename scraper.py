@@ -103,13 +103,6 @@ if __name__ == "__main__":
                 nextPageToken, result = process_response(response)
                 comments += result
                 if not nextPageToken:  # 该视频的评论抓完了
-                    if index % 5000 == 0:
-                        if comments:
-                            filename = "./output/all_comments_" + str(datetime.timestamp(
-                                datetime.now())) + ".json"
-                            with open(filename, 'w', encoding='utf-8') as f:
-                                json.dump(comments, f, indent=4)
-                            comments = []
                     break
     except Exception as error:
         _logger.error(error)

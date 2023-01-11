@@ -13,3 +13,4 @@ csv/
 comments_with_URL/
 *.csv
 *.txt
+scraper_*.py
