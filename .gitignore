@@ -1,4 +1,4 @@
-config.ini
+*.ini
 .idea/
 response.json
 test_comments.json
@@ -9,3 +9,7 @@ keys.txt
 VideoId.csv
 all_comments.csv
 test.ipynb
+csv/
+comments_with_URL/
+*.csv
+*.txt
